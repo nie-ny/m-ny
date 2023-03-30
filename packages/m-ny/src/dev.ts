@@ -78,11 +78,11 @@ export const dev = async () => {
 
       // 监听回掉
       process.on('SIGINT', () => {
-        devServe.stop()
+        // devServe
         process.exit(0)
       })
       process.on('SIGTERM', () => {
-        devServe.stop()
+        // devServe.stop()
         process.exit(1)
       })
     } catch (e) {
