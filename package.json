@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "pnpm --recursive --filter ./packages/* run build",
+    "dev": "pnpm -r --filter ./packages/* --parallel run dev"
+  },
+  "devDependencies": {
+    "esbuild": "^0.17.14",
+    "typescript": "^5.0.2"
+  }
+}
