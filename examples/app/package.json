@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "@examples/app",
   "version": "1.0.0",
   "description": "",
@@ -15,8 +16,11 @@
   "license": "ISC",
   "dependencies": {
     "m-ny": "workspace:*",
+    "keepalive": "workspace:*",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router": "^6.10.0",
+    "react-router-dom": "^6.10.0"
   },
   "devDependencies": {
     "serve": "^14.2.0"
