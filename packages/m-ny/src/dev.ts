@@ -13,6 +13,7 @@ import {
   DEFAULT_BUILD_PORT
 } from './constants'
 import { createWebSocketServer } from './server'
+// import { style } from './styles'
 
 export const dev = async () => {
   // 进程执行时的文件夹地址——工作目录
@@ -35,6 +36,7 @@ export const dev = async () => {
     <head>
         <meta charset="UTF-8">
         <title>m-ny</title>
+        <link href="/${DEFAULT_OUTDIR}/index.css" rel="stylesheet"></link>
     </head>
     
     <body>
