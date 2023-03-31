@@ -5,7 +5,7 @@ const Hello = () => {
   return (
     <span
       onClick={() => {
-        setText('Higgg!')
+        setText('Higgga!')
       }}
     >
       {' '}

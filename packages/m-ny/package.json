@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm esbuild src/** --bundle --outdir=lib --platform=node --external:esbuild",
+    "build:client": "pnpm esbuild ./client/** --bundle --outdir=lib/client --external:esbuild",
     "dev": "pnpm build --watch",
     "hello": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -26,7 +27,9 @@
   },
   "dependencies": {
     "commander": "^10.0.0",
+    "esbuild": "^0.17.14",
     "express": "^4.18.2",
-    "portfinder": "^1.0.32"
+    "portfinder": "^1.0.32",
+    "ws": "^8.13.0"
   }
 }
