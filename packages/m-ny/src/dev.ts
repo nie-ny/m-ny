@@ -14,6 +14,8 @@ import {
 } from './constants'
 import { createWebSocketServer } from './server'
 // import { style } from './styles'
+import { getAppData } from './appData'
+import { getRoutes } from './routes'
 
 export const dev = async () => {
   // 进程执行时的文件夹地址——工作目录
@@ -67,6 +69,15 @@ export const dev = async () => {
     console.log(`App listening at http://${DEFAULT_HOST}:${port}`)
 
     try {
+      // 获取项目元信息
+      const appData = await getAppData({
+        cwd
+      })
+      // 获取 routes 配置
+      const routes = await getRoutes({ appData })
+      console.log('🚀 ~ file: dev.ts:78 ~ malitaServe.listen ~ routes:', routes)
+
+      // 构建更新 插件
       let examplePlugin = {
         name: 'example',
         setup(build: any) {

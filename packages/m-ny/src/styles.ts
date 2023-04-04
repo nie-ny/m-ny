@@ -1,5 +1,6 @@
 import esbuild, { Plugin } from 'esbuild'
 
+// -----------------------------------
 // 废弃 版本原因 import css from ${JSON.stringify(args.path)} 打包工具报错 未找到原因 正在找
 
 // https://github.com/evanw/esbuild/issues/20#issuecomment-802269745
