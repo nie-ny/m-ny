@@ -49,9 +49,10 @@ const filesToRoutes = (files: string[], pagesPath: string): IRoute[] => {
     // basename() 返回 path 的最后一部分; extname() 返回文件扩展名
     // 文件名
     let pagePath = path.basename(i, path.extname(i))
-    // 组合地址
-    const element = path.resolve(pagesPath, pagePath)
-    if (pagePath === 'home') pagePath = ''
+    // 文件地址
+    const element = path.resolve(pagesPath, pagePath).replace(/\\/g, '/')
+
+    if (pagePath === 'Hello') pagePath = ''
     return {
       path: `/${pagePath}`,
       element
@@ -69,7 +70,7 @@ export const getRoutes = ({ appData }: { appData: IAppData }) => {
     const files = getFiles(appData.paths.absPagesPath)
     const routes = filesToRoutes(files, appData.paths.absPagesPath)
     // 获取约定路径 layouts
-    const layoutPath = path.resolve(appData.paths.absSrcPath, DEFAULT_GLOBAL_LAYOUTS)
+    const layoutPath = path.resolve(appData.paths.absSrcPath, DEFAULT_GLOBAL_LAYOUTS).replace(/\\/g, '/')
     if (!existsSync(layoutPath)) {
       resolve(routes)
     } else {

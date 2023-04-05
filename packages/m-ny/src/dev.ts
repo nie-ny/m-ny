@@ -1,4 +1,5 @@
 import express from 'express'
+import fs from 'fs'
 import { context, build } from 'esbuild'
 import type { ServeOnRequestArgs } from 'esbuild'
 import path from 'path'
@@ -16,6 +17,8 @@ import { createWebSocketServer } from './server'
 // import { style } from './styles'
 import { getAppData } from './appData'
 import { getRoutes } from './routes'
+import { generateEntry } from './entry'
+import { generateHtml } from './html'
 
 export const dev = async () => {
   // 进程执行时的文件夹地址——工作目录
@@ -28,32 +31,44 @@ export const dev = async () => {
   })
 
   // 打包后文件地址
-  const esbuildOutput = path.resolve(cwd, DEFAULT_OUTDIR)
+  const output = path.resolve(cwd, DEFAULT_OUTDIR)
 
-  app.get('/', (_req: any, res: any) => {
+  app.get('/', (_req, res, next) => {
     res.set('Content-Type', 'text/html')
-    res.send(`<!DOCTYPE html>
-    <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <title>m-ny</title>
-        <link href="/${DEFAULT_OUTDIR}/index.css" rel="stylesheet"></link>
-    </head>
-    
-    <body>
-        <div id="m-ny">
-            <span>loading...</span>
-        </div>
-        <script src="/${DEFAULT_OUTDIR}/index.js"></script>
-        <script src="/malita/client.js"></script>
-    </body>
-    </html>`)
+    const htmlPath = path.join(output, 'index.html')
+    // 是否存在 文件
+    if (fs.existsSync(htmlPath)) {
+      // createReadStream() 获取文件流
+      fs.createReadStream(htmlPath).on('error', next).pipe(res)
+    } else {
+      next()
+    }
   })
 
-  app.use(`/${DEFAULT_OUTDIR}`, express.static(esbuildOutput))
+  // app.get('/', (_req: any, res: any) => {
+  //   res.set('Content-Type', 'text/html')
+  //   res.send(`<!DOCTYPE html>
+  //   <html lang="en">
+
+  //   <head>
+  //       <meta charset="UTF-8">
+  //       <title>m-ny</title>
+  //       <link href="/${DEFAULT_OUTDIR}/index.css" rel="stylesheet"></link>
+  //   </head>
+
+  //   <body>
+  //       <div id="m-ny">
+  //           <span>loading...</span>
+  //       </div>
+  //       <script src="/${DEFAULT_OUTDIR}/index.js"></script>
+  //       <script src="/m-ny/client.js"></script>
+  //   </body>
+  //   </html>`)
+  // })
+
+  app.use(`/${DEFAULT_OUTDIR}`, express.static(output))
   // 客户端代码加入静态管理器
-  app.use(`/malita`, express.static(path.resolve(__dirname, 'client')))
+  app.use(`/m-ny`, express.static(path.resolve(__dirname, 'client')))
 
   // 使用 http 搭建express服务
   const malitaServe = createServer(app)
@@ -75,7 +90,12 @@ export const dev = async () => {
       })
       // 获取 routes 配置
       const routes = await getRoutes({ appData })
-      console.log('🚀 ~ file: dev.ts:78 ~ malitaServe.listen ~ routes:', routes)
+      // console.log('🚀 ~ file: dev.ts:78 ~ malitaServe.listen ~ routes:', routes)
+
+      // 生成项目主入口
+      await generateEntry({ appData, routes })
+      // 生成 Html
+      await generateHtml({ appData })
 
       // 构建更新 插件
       let examplePlugin = {
@@ -97,7 +117,7 @@ export const dev = async () => {
         // 错误日志
         logLevel: 'error',
         // 输出地址
-        outdir: DEFAULT_OUTDIR,
+        outdir: appData.paths.absOutputPath,
         // 平台
         platform: DEFAULT_PLATFORM,
         // 捆绑
@@ -108,7 +128,7 @@ export const dev = async () => {
         },
         external: ['esbuild'],
         // 入口文件
-        entryPoints: [path.resolve(cwd, DEFAULT_ENTRY_POINT)],
+        entryPoints: [appData.paths.absEntryPath],
         plugins: [examplePlugin]
       })
 

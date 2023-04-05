@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "build": "pnpm esbuild src/** --bundle --outdir=lib --platform=node --external:esbuild",
+    "build": "pnpm esbuild ./src/** --bundle --outdir=lib --platform=node --external:esbuild",
     "build:client": "pnpm esbuild ./client/** --bundle --outdir=lib/client --external:esbuild",
     "dev": "pnpm build --watch",
     "hello": "node src/index.js",

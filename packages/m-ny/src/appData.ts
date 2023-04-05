@@ -9,9 +9,12 @@ export interface IAppData {
   paths: {
     cwd: string
     absSrcPath: string
+    // pages 目录绝对路径
     absPagesPath: string
     absTmpPath: string
+    // 输出目录绝对路径
     absOutputPath: string
+    // 主入口文件的绝对路径
     absEntryPath: string
     absNodeModulesPath: string
   }
