@@ -2,6 +2,7 @@ import { mkdir, writeFileSync } from 'fs'
 import path from 'path'
 import type { IAppData } from './appData'
 import type { IRoute } from './routes'
+import type { UserConfig } from './config'
 
 let count = 1
 /**
@@ -27,11 +28,33 @@ const getRouteStr = (routes: IRoute[]) => {
 }
 
 /**
+ * 判读是否是正则表达式
+ * @param config
+ * @returns
+ */
+const configStringify = (config: (string | RegExp)[]) => {
+  return config.map((item) => {
+    if (item instanceof RegExp) {
+      return item
+    }
+    return `'${item}'`
+  })
+}
+
+/**
  * 生成入口文件
  * @param param0
  * @returns
  */
-export const generateEntry = ({ appData, routes }: { appData: IAppData; routes: IRoute[] }) => {
+export const generateEntry = ({
+  appData,
+  routes,
+  userConfig
+}: {
+  appData: IAppData
+  routes: IRoute[]
+  userConfig: UserConfig
+}) => {
   return new Promise((resolve, rejects) => {
     count = 0
     const { routesStr, importStr } = getRouteStr(routes)
@@ -44,7 +67,7 @@ export const generateEntry = ({ appData, routes }: { appData: IAppData; routes: 
 
       const App = () => {
         return (
-            <KeepAliveLayout keepalive={[/./]}>
+            <KeepAliveLayout keepalive={[${configStringify(userConfig.keepalive || [])}]}>
                 <HashRouter>
                     <Routes>
                         ${routesStr}

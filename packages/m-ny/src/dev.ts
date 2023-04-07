@@ -19,6 +19,7 @@ import { getAppData } from './appData'
 import { getRoutes } from './routes'
 import { generateEntry } from './entry'
 import { generateHtml } from './html'
+import { getUserConfig } from './config'
 
 export const dev = async () => {
   // 进程执行时的文件夹地址——工作目录
@@ -90,12 +91,16 @@ export const dev = async () => {
       })
       // 获取 routes 配置
       const routes = await getRoutes({ appData })
-      // console.log('🚀 ~ file: dev.ts:78 ~ malitaServe.listen ~ routes:', routes)
 
+      // 获取用户数据
+      const userConfig = await getUserConfig({
+        appData,
+        sendMessage
+      })
       // 生成项目主入口
-      await generateEntry({ appData, routes })
+      await generateEntry({ appData, routes, userConfig })
       // 生成 Html
-      await generateHtml({ appData })
+      await generateHtml({ appData, userConfig })
 
       // 构建更新 插件
       let examplePlugin = {

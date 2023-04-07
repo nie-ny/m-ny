@@ -1,17 +1,19 @@
 import { mkdir, writeFileSync } from 'fs'
 import path from 'path'
 import type { IAppData } from './appData'
+import type { UserConfig } from './config'
 import { DEFAULT_OUTDIR } from './constants'
 
-export const generateHtml = ({ appData }: { appData: IAppData }) => {
+export const generateHtml = ({ appData, userConfig }: { appData: IAppData; userConfig: UserConfig }) => {
   return new Promise((resolve, rejects) => {
+    const title = userConfig?.title ?? appData.pkg.name ?? 'ny'
     const content = `
         <!DOCTYPE html>
         <html lang="en">
         
         <head>
             <meta charset="UTF-8">
-            <title>${appData.pkg.name ?? '测试'}</title>
+            <title>${title}</title>
             <link href="/${DEFAULT_OUTDIR}/index.css" rel="stylesheet"></link>
         </head>
         
